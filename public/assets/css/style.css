@@ -1,0 +1,28 @@
+html,
+body{
+}
+
+.margin-10{
+  margin: 10px;
+}
+
+nav.navbar{
+  border-radius: 0px !important;
+}
+
+.no-padding{
+  padding-left: 0px;
+  padding-right: 0px;
+}
+voting-app div.loading{
+  font-size: 28pt;
+  text-align: center;
+  margin-left: auto;
+  margin-top: auto;
+}
+nav.navbar li span{
+    font-size: 15pt;
+    color: white;
+    top: 11px;
+    position: relative;
+}

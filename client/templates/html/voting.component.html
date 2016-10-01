@@ -1,0 +1,34 @@
+<div class="app">
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" routerLink="" >Voting App</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav pull-right">
+            <li ><a routerLink="" >Home</a></li>
+            <li *ngIf="logged"><a routerLink="poll/list" >My Polls</a></li>
+            <li *ngIf="logged"><a routerLink="poll/create/0" >Create Poll</a></li>
+            <li *ngIf="logged"><span>{{loggedUser.name}}</span></li>
+            <li>
+                <div class="margin-10">
+                    <a *ngIf="!logged" class="btn btn-sm btn-primary" (click)="login()" >Sing using Twitter</a>
+                    <a *ngIf="logged" class="btn btn-sm btn-danger" (click)="logout()" >Logout</a>
+                </div>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    <div class="container">
+        <div class="starter-template">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+<div class="no-padding text-center">
+    <h1>fcc-voting</h1>
+    <h5>Below are polls hosted by fcc-voting.</h5>
+    <h5>Select a poll to see the results and vote, or sign-in to make a new poll.</h5>
+    <!-- List group -->
+    <div class="list-group">
+        <a *ngFor="let poll of polls" routerLink="poll/show/{{poll._id}}" class="list-group-item">{{poll.name}}</a>
+    </div>
+</div>
