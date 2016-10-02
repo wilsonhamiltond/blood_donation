@@ -4,8 +4,7 @@ import { join } from 'path';
 import * as mongoose from 'mongoose';
 import { equal } from 'assert';
 
-import { Poll } from './modules/poll';
-import { User } from './modules/user';
+import { Donor } from './modules/donor';
 
 /**
 *   The server
@@ -36,16 +35,18 @@ class Server{
             this.app.use(express.static(join(__dirname, '../node_modules')));
             this.app.use(express.static(join(__dirname, '../tools')));
         }
+        this.app.use('/', express.static(join(__dirname, '../')));
         this.app.use('/client', express.static(join(__dirname, '../client')));
         this.app.use( express.static( join( __dirname, '../public' ) ) );
-        mongoose.connect('mongodb://localhost:27017/voting');
+        
+        mongoose.connect('mongodb://localhost:27017/blood_donation');
     }
     
     services(){
-        this.app.use(Poll.services());
-        this.app.use(User.services());
+        this.app.use(Donor.services());
+
         this.app.get('/', function(req, res){
-           res.sendFile(__dirname + '../public/index.html'); 
+           res.sendFile(__dirname + '../pulic/index.html'); 
         });
     }
     

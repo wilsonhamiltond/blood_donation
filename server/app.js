@@ -3,8 +3,7 @@ var express = require('express');
 var body_parser_1 = require('body-parser');
 var path_1 = require('path');
 var mongoose = require('mongoose');
-var poll_1 = require('./modules/poll');
-var user_1 = require('./modules/user');
+var donor_1 = require('./modules/donor');
 /**
 *   The server
 *
@@ -26,15 +25,15 @@ var Server = (function () {
             this.app.use(express.static(path_1.join(__dirname, '../node_modules')));
             this.app.use(express.static(path_1.join(__dirname, '../tools')));
         }
+        this.app.use('/', express.static(path_1.join(__dirname, '../')));
         this.app.use('/client', express.static(path_1.join(__dirname, '../client')));
         this.app.use(express.static(path_1.join(__dirname, '../public')));
-        mongoose.connect('mongodb://localhost:27017/voting');
+        mongoose.connect('mongodb://localhost:27017/blood_donation');
     };
     Server.prototype.services = function () {
-        this.app.use(poll_1.Poll.services());
-        this.app.use(user_1.User.services());
+        this.app.use(donor_1.Donor.services());
         this.app.get('/', function (req, res) {
-            res.sendFile(__dirname + '../public/index.html');
+            res.sendFile(__dirname + '../pulic/index.html');
         });
     };
     Server.prototype.run = function () {

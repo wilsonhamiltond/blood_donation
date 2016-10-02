@@ -1,0 +1,64 @@
+<modal #donorModal>
+    <form [formGroup]="donorForm" (ngSubmit)="saveDonnor(donorForm.value)">
+        <modal-header [show-close]="true">
+            <h4 class="modal-title">Donor Register From</h4>
+        </modal-header>
+        <modal-body>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group" [ngClass]="{ 'has-error':!donorForm.controls['firstName'].valid, 'has-success' :donorForm.controls['firstName'].valid}">
+                        <label class="control-label" >First Name:</label>
+                        <input type="text" class="form-control" [formControl]="donorForm.controls['firstName']">
+                        <span *ngIf="donorForm.controls['firstName'].hasError('required') && donorForm.controls['firstName'].touched" class="help-block">
+                            The first name is required
+                        </span>
+                        <span *ngIf="donorForm.controls['firstName'].hasError('maxlength') && donorForm.controls['firstName'].touched" class="help-block">
+                            The first name max length is 20
+                        </span>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error':!donorForm.controls['lastName'].valid, 'has-success' :donorForm.controls['lastName'].valid}">
+                        <label class="control-label" >Last Name:</label>
+                        <input type="text" class="form-control" [formControl]="donorForm.controls['lastName']" >
+                        <span *ngIf="donorForm.controls['lastName'].hasError('required') && donorForm.controls['lastName'].touched" class="help-block">
+                            The last name is required
+                        </span>
+                        <span *ngIf="donorForm.controls['lastName'].hasError('maxlength') && donorForm.controls['lastName'].touched" class="help-block">
+                            The last name max length is 20
+                        </span>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error':!donorForm.controls['contactNumber'].valid, 'has-success' :donorForm.controls['contactNumber'].valid}">
+                        <label class="control-label" >Contact Number:</label>
+                        <input type="text" class="form-control" [formControl]="donorForm.controls['contactNumber']" >
+                        <span *ngIf="donorForm.controls['contactNumber'].hasError('required') && donorForm.controls['contactNumber'].touched" class="help-block">
+                            The contact number is required
+                        </span>
+                        <span *ngIf="donorForm.controls['contactNumber'].hasError('maxlength') && donorForm.controls['contactNumber'].touched" class="help-block">
+                            The contact number max length is 20
+                        </span>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error':!donorForm.controls['emailAddress'].valid, 'has-success' :donorForm.controls['emailAddress'].valid}">
+                        <label class="control-label" >Email Address</label>
+                        <input type="text" class="form-control"  [formControl]="donorForm.controls['emailAddress']">
+                        <span *ngIf="donorForm.controls['emailAddress'].hasError('required') && donorForm.controls['emailAddress'].touched" class="help-block">
+                            The email address is required
+                        </span>
+                        <span *ngIf="donorForm.controls['emailAddress'].hasError('maxlength') && donorForm.controls['emailAddress'].touched" class="help-block">
+                            The email address max length is 10
+                        </span>
+                    </div>
+                    <div class="form-group" [ngClass]="{'has-error':!donorForm.controls['bloodGroup'].valid, 'has-success' :donorForm.controls['bloodGroup'].valid}">
+                        <label class="control-label" >Blood Group</label>
+                        <input type="text" class="form-control" [formControl]="donorForm.controls['bloodGroup']">
+                        <span *ngIf="donorForm.controls['bloodGroup'].hasError('required') && donorForm.controls['bloodGroup'].touched" class="help-block">
+                            The blood group is required
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </modal-body>
+        <modal-footer [show-default-buttons]="false">
+            <button type="submit" [disabled]="!donorForm.valid" class="btn btn-primary">Save</button>
+            <a class="btn btn-warning" (click)="close()">Close</a>
+        </modal-footer>
+    </form>
+</modal>

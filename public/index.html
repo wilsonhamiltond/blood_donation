@@ -1,25 +1,36 @@
 <html>
     <head>
-        <title>File Size FCC</title>
+        <title>Boold Donation</title>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+        <link rel="stylesheet" href="//js.arcgis.com/3.16/esri/themes/calcite/dijit/calcite.css" />
+        <link rel="stylesheet" href="//js.arcgis.com/3.16/esri/themes/calcite/esri/esri.css" /> 
+
+        <link rel="stylesheet" type="text/css" href="/angular2-toaster/lib/toaster.css" />
+
         <link href="assets/css/style.css" rel="stylesheet" />
-        <!-- 1. Load libraries -->
-         <!-- Polyfill(s) for older browsers -->
-        <script src="core-js/client/shim.min.js" ></script>
-        <script src="zone.js/dist/zone.js"></script>
-        <script src="reflect-metadata/Reflect.js"></script>
-        <script src="systemjs/dist/system.src.js"></script>
-        <!-- 2. Configure SystemJS -->
-        <script src="systemjs.config.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+        
         <script>
-          System.import('app').catch(function(err){ console.error(err); });
+            window.dojoConfig = {
+                async: true
+            };
+        </script>
+        <script src="https://js.arcgis.com/3.16/"></script>
+
+        <!-- Load webpack bundles-->
+        <script>
+            require(["/dist/vendor.bundle.js", "/dist/main.bundle.js"], function (vendor, main) {});
         </script>
     </head>
-    <body>
-      <voting-app>
-          <div class"loading">Loading...</div>
-        </voting-app>
+    <body class="calcite">
+        <bd-app>
+            <div class="loading">
+                <img class="img-responsive" src="assets/img/loading.jpeg" />
+            </div>
+        </bd-app>
     </body>
 </html>

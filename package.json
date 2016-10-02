@@ -5,9 +5,11 @@
   "main": "server/app.js",
   "scripts": {
     "start": "node ./server/app.js",
+    "webpack:w": "webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "develop": "concurrently \"tsc -w -p ./server\" \"tsc -w -p ./client\" \"mongod --smallfiles\" ",
-    "typings": "typings"
+    "develop": "concurrently \"npm run webpack:w\" \"tsc -w -p ./server\" \"tsc -w -p ./client\" \"mongod --dbpath=./db\" ",
+    "typings": "typings",
+    "postinstall": "typings install"
   },
   "repository": {
     "type": "git",
@@ -31,11 +33,13 @@
     "@angular/upgrade": "~2.0.1",
     "angular-in-memory-web-api": "~0.1.1",
     "angular2-jwt": "^0.1.23",
+    "angular2-toaster": "^1.0.1",
     "body-parser": "^1.15.2",
     "bootstrap": "^3.3.7",
     "core-js": "^2.4.1",
     "express": "^4.14.0",
     "mongoose": "^4.6.1",
+    "ng2-bs3-modal": "^0.10.4",
     "q": "^1.4.1",
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.0-beta.12",
@@ -46,6 +50,8 @@
     "concurrently": "^3.0.0",
     "lite-server": "^2.2.2",
     "typescript": "^2.0.3",
-    "typings": "^1.4.0"
+    "ts-loader": "^0.8.2",
+    "typings": "^1.4.0",
+    "webpack": "^1.13.1"
   }
 }

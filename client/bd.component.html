@@ -1,0 +1,5 @@
+<bd-map (mapLoaded)="onMapLoad($event)" (mapClick)="onMapClick($event)">
+    <bd-search [options]="searchOptions"></bd-search>
+</bd-map>
+<bd-donor (saveDonor)="onDonorSave($event)"></bd-donor>
+<toaster-container></toaster-container>

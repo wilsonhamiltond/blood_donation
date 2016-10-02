@@ -1,5 +1,5 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { VotingMainModule } from './voting.module';
+import { BloodDonationMainModule } from './bd.module';
 
 const platfom = platformBrowserDynamic();
-platfom.bootstrapModule(VotingMainModule);
+platfom.bootstrapModule(BloodDonationMainModule);

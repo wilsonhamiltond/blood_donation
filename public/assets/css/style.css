@@ -1,28 +1,42 @@
 html,
-body{
+body,
+bd-app,
+bd-map,
+bd-map div.map{
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  display: block;
+}
+
+bd-map bd-search .arcgisSearch {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  top: 15px;
+  left: 65px;
+}
+
+bd-map .add-donation{
+  position: absolute;
+  z-index: 1000;
+  right: 10;
+  top: 20px;
+}
+
+bd-app div.loading{
+  left: 50%;
+  top: 50%;
+  height: 256px;
+  width: 256px;
+  margin-left: -128px;
+  margin-top: -128px;
+  position: absolute;
 }
 
 .margin-10{
   margin: 10px;
 }
-
-nav.navbar{
-  border-radius: 0px !important;
-}
-
-.no-padding{
-  padding-left: 0px;
-  padding-right: 0px;
-}
-voting-app div.loading{
-  font-size: 28pt;
-  text-align: center;
-  margin-left: auto;
-  margin-top: auto;
-}
-nav.navbar li span{
-    font-size: 15pt;
-    color: white;
-    top: 11px;
-    position: relative;
+div.modal-dialog{
+  width: 450px !important;
 }
