@@ -4,7 +4,7 @@
   "description": "Blood Donation for crossover test",
   "main": "server/app.js",
   "scripts": {
-    "start": "concurrently \"npm run webpack:w\" \"mongod --smallfiles --dbpath=./db\" \"node ./server/app.js\" ",
+    "start": "concurrently \"npm run webpack:w\" \"node ./server/app.js\" ",
     "webpack:w": "webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "develop": "concurrently \"npm run webpack:w\" \"tsc -w -p ./server\" \"tsc -w -p ./client\" \"mongod --smallfiles --dbpath=./db\" ",
