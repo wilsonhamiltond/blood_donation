@@ -11,6 +11,7 @@
     "typings": "typings",
     "postinstall": "typings install"
   },
+  "engine": "node 6.7.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wilsonhamiltond/blood_donation.git"
