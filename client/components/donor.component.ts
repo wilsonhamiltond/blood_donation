@@ -4,6 +4,8 @@ import { ModalComponent } from 'ng2-bs3-modal/ng2-bs3-modal';
 import { DonorModel } from '../models/donor.model';
 import { DonorService } from '../services/donor.service';
 
+import { Control } from '@angular/forms';
+
 @Component({
     selector: 'bd-donor',
     templateUrl: 'client/components/donor.component.html',
@@ -32,6 +34,13 @@ export class DonorComponent{
     open(object) { 
         this.address.latitude = object.latitude;
         this.address.longitude = object.longitude;
+        if( object._id){
+            for( var prop in object){
+                if(this.donorForm.controls.hasOwnProperty(prop)){
+                    this.donorForm.controls[prop].setValue( object[prop] );
+                }
+            }
+        }
         this.donorModal.open();
     } 
     deleteDonor(donor){

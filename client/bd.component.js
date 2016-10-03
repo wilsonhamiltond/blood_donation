@@ -46,17 +46,19 @@ var BloodDonationComponent = (function () {
             _this.mapCompoenent.showMarkers(donors);
         });
     };
-    BloodDonationComponent.prototype.onEditDonor = function (event) {
-        this.confirmDialog.open();
+    BloodDonationComponent.prototype.onEditDonor = function (graphic) {
+        this.showDonorPopup(graphic.node);
     };
     BloodDonationComponent.prototype.onDeleteDonor = function (graphic) {
         this.confirmDialog.show('Confirmation', 'Do you want delete the donor ' + (graphic.node.firstName + ' ' || '') + (graphic.node.lastName || ''), graphic);
     };
     BloodDonationComponent.prototype.onAcceptConfirm = function (graphic) {
+        var _this = this;
         this.donorComponent.deleteDonor(graphic.node).
             subscribe(function (res) {
             if (res.result == true) {
                 console.log(graphic.node);
+                _this.toaster.pop('success', 'Success!', 'Donor delete success.!');
             }
         });
     };
@@ -66,9 +68,9 @@ var BloodDonationComponent = (function () {
             longitude: event.mapPoint.getLongitude()
         };
         this.showDonorPopup(object);
-        this.mapCompoenent.getAddress(event.mapPoint).then(function (res) {
+        /*this.mapCompoenent.getAddress(event.mapPoint).then((res)=>{
             var address = res;
-        });
+        });*/
     };
     BloodDonationComponent.prototype.showDonorPopup = function (object) {
         this.donorComponent.open(object);

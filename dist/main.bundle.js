@@ -148,17 +148,19 @@ define(["esri/arcgis/utils","esri/basemaps","esri/dijit/Legend","esri/dijit/Sear
 	            _this.mapCompoenent.showMarkers(donors);
 	        });
 	    };
-	    BloodDonationComponent.prototype.onEditDonor = function (event) {
-	        this.confirmDialog.open();
+	    BloodDonationComponent.prototype.onEditDonor = function (graphic) {
+	        this.showDonorPopup(graphic.node);
 	    };
 	    BloodDonationComponent.prototype.onDeleteDonor = function (graphic) {
 	        this.confirmDialog.show('Confirmation', 'Do you want delete the donor ' + (graphic.node.firstName + ' ' || '') + (graphic.node.lastName || ''), graphic);
 	    };
 	    BloodDonationComponent.prototype.onAcceptConfirm = function (graphic) {
+	        var _this = this;
 	        this.donorComponent.deleteDonor(graphic.node).
 	            subscribe(function (res) {
 	            if (res.result == true) {
 	                console.log(graphic.node);
+	                _this.toaster.pop('success', 'Success!', 'Donor delete success.!');
 	            }
 	        });
 	    };
@@ -168,9 +170,9 @@ define(["esri/arcgis/utils","esri/basemaps","esri/dijit/Legend","esri/dijit/Sear
 	            longitude: event.mapPoint.getLongitude()
 	        };
 	        this.showDonorPopup(object);
-	        this.mapCompoenent.getAddress(event.mapPoint).then(function (res) {
+	        /*this.mapCompoenent.getAddress(event.mapPoint).then((res)=>{
 	            var address = res;
-	        });
+	        });*/
 	    };
 	    BloodDonationComponent.prototype.showDonorPopup = function (object) {
 	        this.donorComponent.open(object);
@@ -925,6 +927,16 @@ define(["esri/arcgis/utils","esri/basemaps","esri/dijit/Legend","esri/dijit/Sear
 	    };
 	    MapService.prototype.showMarkers = function (map, donors) {
 	        var picSymbol = new PictureMarkerSymbol('./assets/img/blood-donation.png', 60, 60);
+	        if (donors.length == 1) {
+	            map.graphics.graphics.forEach(function (graphic) {
+	                if (graphic.node) {
+	                    if (graphic.node._id == donors[0]._id) {
+	                        map.graphics.remove(graphic);
+	                        map.infoWindow.hide();
+	                    }
+	                }
+	            });
+	        }
 	        donors.forEach(function (donor) {
 	            var geometryPoint = new Point(donor.longitude, donor.latitude);
 	            /*var textSymbol = new TextSymbol('').setOffset(0, -4);
@@ -938,7 +950,7 @@ define(["esri/arcgis/utils","esri/basemaps","esri/dijit/Legend","esri/dijit/Sear
 	        map.graphics.graphics.forEach(function (graphic) {
 	            if (graphic.node) {
 	                if (graphic.node._id == donor._id) {
-	                    map.graphics.clear(graphic);
+	                    map.graphics.remove(graphic);
 	                    map.infoWindow.hide();
 	                }
 	            }
@@ -1095,6 +1107,13 @@ define(["esri/arcgis/utils","esri/basemaps","esri/dijit/Legend","esri/dijit/Sear
 	    DonorComponent.prototype.open = function (object) {
 	        this.address.latitude = object.latitude;
 	        this.address.longitude = object.longitude;
+	        if (object._id) {
+	            for (var prop in object) {
+	                if (this.donorForm.controls.hasOwnProperty(prop)) {
+	                    this.donorForm.controls[prop].setValue(object[prop]);
+	                }
+	            }
+	        }
 	        this.donorModal.open();
 	    };
 	    DonorComponent.prototype.deleteDonor = function (donor) {
@@ -1569,11 +1588,35 @@ define(["esri/arcgis/utils","esri/basemaps","esri/dijit/Legend","esri/dijit/Sear
 	            '_id': '',
 	            'firstName': [null, forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(20)])],
 	            'lastName': [null, forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(20)])],
-	            'contactNumber': [null, forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(20)])],
-	            'emailAddress': [null, forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(10)])],
+	            'contactNumber': [null, DonorModel.phone],
+	            'emailAddress': [null, DonorModel.email],
 	            'bloodGroup': [null, forms_1.Validators.compose([forms_1.Validators.required])],
 	        });
 	    }
+	    DonorModel.phone = function (control) {
+	        //Skip validation if empty, to handle optional fields
+	        var phoneNumber = /(\+|[0]{2})[\d]{2} [\d]{3} [\d]{4} [\d]{3}/g;
+	        if (!control.value) {
+	            return null;
+	        }
+	        var valid = phoneNumber.test(control.value);
+	        if (valid) {
+	            return null;
+	        }
+	        return { "invalid": true };
+	    };
+	    DonorModel.email = function (control) {
+	        //Skip validation if empty, to handle optional fields
+	        var emailAddress = /\w+@+[a-zA-z]+?\.[a-zA-Z]{2,3}(\.[a-zA-Z]{2})?/g;
+	        if (!control.value) {
+	            return null;
+	        }
+	        var valid = emailAddress.test(control.value);
+	        if (valid) {
+	            return null;
+	        }
+	        return { "invalid": true };
+	    };
 	    DonorModel = __decorate([
 	        core_1.Injectable(), 
 	        __metadata('design:paramtypes', [forms_1.FormBuilder])

@@ -109,6 +109,16 @@ export class MapService {
 
   showMarkers(map, donors){
     var picSymbol = new PictureMarkerSymbol('./assets/img/blood-donation.png', 60, 60);
+    if( donors.length == 1){
+        map.graphics.graphics.forEach((graphic) =>{
+          if(graphic.node){
+            if( graphic.node._id == donors[0]._id){
+              map.graphics.remove( graphic );
+              map.infoWindow.hide();
+            }
+          }
+        });
+    }
     donors.forEach((donor)=>{
           var geometryPoint = new Point(donor.longitude, donor.latitude);
           /*var textSymbol = new TextSymbol('').setOffset(0, -4);
@@ -123,7 +133,7 @@ export class MapService {
     map.graphics.graphics.forEach((graphic) =>{
       if(graphic.node){
         if( graphic.node._id == donor._id){
-          map.graphics.clear( graphic );
+          map.graphics.remove( graphic );
           map.infoWindow.hide();
         }
       }

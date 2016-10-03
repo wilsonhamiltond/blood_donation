@@ -16,11 +16,35 @@ var DonorModel = (function () {
             '_id': '',
             'firstName': [null, forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(20)])],
             'lastName': [null, forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(20)])],
-            'contactNumber': [null, forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(20)])],
-            'emailAddress': [null, forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.maxLength(10)])],
+            'contactNumber': [null, DonorModel.phone],
+            'emailAddress': [null, DonorModel.email],
             'bloodGroup': [null, forms_1.Validators.compose([forms_1.Validators.required])],
         });
     }
+    DonorModel.phone = function (control) {
+        //Skip validation if empty, to handle optional fields
+        var phoneNumber = /(\+|[0]{2})[\d]{2} [\d]{3} [\d]{4} [\d]{3}/g;
+        if (!control.value) {
+            return null;
+        }
+        var valid = phoneNumber.test(control.value);
+        if (valid) {
+            return null;
+        }
+        return { "invalid": true };
+    };
+    DonorModel.email = function (control) {
+        //Skip validation if empty, to handle optional fields
+        var emailAddress = /\w+@+[a-zA-z]+?\.[a-zA-Z]{2,3}(\.[a-zA-Z]{2})?/g;
+        if (!control.value) {
+            return null;
+        }
+        var valid = emailAddress.test(control.value);
+        if (valid) {
+            return null;
+        }
+        return { "invalid": true };
+    };
     DonorModel = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [forms_1.FormBuilder])

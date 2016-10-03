@@ -54,8 +54,8 @@ export class BloodDonationComponent{
             this.mapCompoenent.showMarkers(donors);
         });
     }
-    onEditDonor(event){
-          this.confirmDialog.open();
+    onEditDonor(graphic){
+        this.showDonorPopup(graphic.node);
     }
     
     onDeleteDonor(graphic){
@@ -70,6 +70,7 @@ export class BloodDonationComponent{
             subscribe( (res) =>{
                 if( res.result == true){
                     console.log(graphic.node);
+                    this.toaster.pop( 'success', 'Success!', 'Donor delete success.!');
                 }
             });
     }
@@ -80,9 +81,9 @@ export class BloodDonationComponent{
             longitude: event.mapPoint.getLongitude()
         };
         this.showDonorPopup(object);
-        this.mapCompoenent.getAddress(event.mapPoint).then((res)=>{
+        /*this.mapCompoenent.getAddress(event.mapPoint).then((res)=>{
             var address = res;
-        });
+        });*/
     }
 
     showDonorPopup(object){

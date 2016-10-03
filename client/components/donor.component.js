@@ -29,6 +29,13 @@ var DonorComponent = (function () {
     DonorComponent.prototype.open = function (object) {
         this.address.latitude = object.latitude;
         this.address.longitude = object.longitude;
+        if (object._id) {
+            for (var prop in object) {
+                if (this.donorForm.controls.hasOwnProperty(prop)) {
+                    this.donorForm.controls[prop].setValue(object[prop]);
+                }
+            }
+        }
         this.donorModal.open();
     };
     DonorComponent.prototype.deleteDonor = function (donor) {

@@ -41,7 +41,21 @@ export class Donor{
                 }
             });
         }else{
-            
+            donor.update_date = Date();
+            this.DonorModel.update({_id: donor._id}, {
+                firstName: donor.firstName,
+                lastName: donor.lastName,
+                emailAddress: donor.emailAddress,
+                contactNumber: donor.contactNumber,
+                bloodGroup: donor.bloodGroup,
+                update_date: Date()
+            }, (err, res)=>{
+                if(err){
+                    deff.reject(new Error(err));
+                }else{
+                    deff.resolve(res);
+                }
+            });
         }
         return deff.promise;
     }
@@ -114,11 +128,11 @@ export class Donor{
             var donorObject = req.body;
             donorObject.ipAddress = req.header('x-forwarded-for');
             donor.save(donorObject).then(function (obj) {
-                console.log(obj);
-                io.emit('donor_saved', obj._doc);
+                var doc = (donorObject._id || donorObject._id == null)? obj._doc : donorObject;
+                io.emit('donor_saved', doc);
                 res.send({
                     result: true,
-                    donor: obj._doc
+                    donor: doc
                 });
             }).catch(function (err) {
                 equal(null, err);
