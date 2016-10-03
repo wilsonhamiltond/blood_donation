@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "develop": "concurrently \"npm run webpack:w\" \"tsc -w -p ./server\" \"tsc -w -p ./client\" \"mongod --smallfiles --dbpath=./db\" ",
     "typings": "typings",
-    "postinstall": "typings install"
+    "preinstall": "npm i typings -g && typings install"
   },
   "engine": "node 6.7.0",
   "repository": {
