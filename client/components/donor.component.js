@@ -24,6 +24,7 @@ var DonorComponent = (function () {
         };
     }
     DonorComponent.prototype.close = function () {
+        this.donorForm.reset();
         this.donorModal.close();
     };
     DonorComponent.prototype.open = function (object) {

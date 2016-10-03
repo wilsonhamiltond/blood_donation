@@ -24,15 +24,21 @@ var Server = (function () {
         return new Server();
     };
     Server.prototype.config = function () {
+        var db = '';
         this.app.use(body_parser_1.json());
         if (this.app.get("env") === "development") {
             this.app.use(express.static(path_1.join(__dirname, '../node_modules')));
             this.app.use(express.static(path_1.join(__dirname, '../tools')));
+            db = 'mongodb://localhost:27017/blood_donation';
+        }
+        if( db == ''){
+            db = 'mongodb://heroku_8w7ntdjl:6n8gttupcjbd1i53un72khjpfp@ds049496.mlab.com:49496/heroku_8w7ntdjl';
         }
         this.app.use('/', express.static(path_1.join(__dirname, '../')));
         this.app.use('/client', express.static(path_1.join(__dirname, '../client')));
         this.app.use(express.static(path_1.join(__dirname, '../public')));
-        mongoose.connect('mongodb://localhost:27017/blood_donation');
+        //
+        mongoose.connect(db);
     };
     Server.prototype.services = function () {
         this.app.use(donor_1.Donor.services(this.io));

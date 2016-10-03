@@ -56,19 +56,19 @@ var MapComponent = (function () {
                     '<div class="col-lg-7 n-p">' +
                     '<b>' + donor.firstName + ' ' + donor.lastName + '</b>' +
                     '</div>' +
-                    '<div class="col-lg-5 n-p">Contact Number:</div>' +
+                    '<div class="col-lg-5 n-p">Blood Group:</div>' +
                     '<div class="col-lg-7 n-p">' +
-                    '<b>' + donor.contactNumber + '</b>' +
+                    '<b>' + donor.bloodGroup + '</b>' +
                     '</div>' +
                     '<div class="col-lg-5 n-p">Email Address:</div>' +
                     '<div class="col-lg-7 n-p" >' +
                     '<a class="donor-link">Click to show</a>' +
                     '<b>' + donor.emailAddress + '</b>' +
                     '</div>' +
-                    '<div class="col-lg-5 n-p">Blood Group:</div>' +
+                    '<div class="col-lg-5 n-p">Contact Number:</div>' +
                     '<div class="col-lg-7 n-p">' +
                     '<a class="donor-link">Click to show</a>' +
-                    '<b>' + donor.bloodGroup + '</b>' +
+                    '<b>' + donor.contactNumber + '</b>' +
                     '</div>' +
                     '<div class="col-lg-12 margin-10 n-p">' +
                     '<a id="editButton" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-pencil"></i> Edit</a>' +

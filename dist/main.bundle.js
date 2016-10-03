@@ -734,19 +734,19 @@ define(["esri/arcgis/utils","esri/basemaps","esri/dijit/Legend","esri/dijit/Sear
 	                    '<div class="col-lg-7 n-p">' +
 	                    '<b>' + donor.firstName + ' ' + donor.lastName + '</b>' +
 	                    '</div>' +
-	                    '<div class="col-lg-5 n-p">Contact Number:</div>' +
+	                    '<div class="col-lg-5 n-p">Blood Group:</div>' +
 	                    '<div class="col-lg-7 n-p">' +
-	                    '<b>' + donor.contactNumber + '</b>' +
+	                    '<b>' + donor.bloodGroup + '</b>' +
 	                    '</div>' +
 	                    '<div class="col-lg-5 n-p">Email Address:</div>' +
 	                    '<div class="col-lg-7 n-p" >' +
 	                    '<a class="donor-link">Click to show</a>' +
 	                    '<b>' + donor.emailAddress + '</b>' +
 	                    '</div>' +
-	                    '<div class="col-lg-5 n-p">Blood Group:</div>' +
+	                    '<div class="col-lg-5 n-p">Contact Number:</div>' +
 	                    '<div class="col-lg-7 n-p">' +
 	                    '<a class="donor-link">Click to show</a>' +
-	                    '<b>' + donor.bloodGroup + '</b>' +
+	                    '<b>' + donor.contactNumber + '</b>' +
 	                    '</div>' +
 	                    '<div class="col-lg-12 margin-10 n-p">' +
 	                    '<a id="editButton" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-pencil"></i> Edit</a>' +
@@ -1102,6 +1102,7 @@ define(["esri/arcgis/utils","esri/basemaps","esri/dijit/Legend","esri/dijit/Sear
 	        };
 	    }
 	    DonorComponent.prototype.close = function () {
+	        this.donorForm.reset();
 	        this.donorModal.close();
 	    };
 	    DonorComponent.prototype.open = function (object) {
@@ -1595,27 +1596,27 @@ define(["esri/arcgis/utils","esri/basemaps","esri/dijit/Legend","esri/dijit/Sear
 	    }
 	    DonorModel.phone = function (control) {
 	        //Skip validation if empty, to handle optional fields
-	        var phoneNumber = /(\+|[0]{2})[\d]{2} [\d]{3} [\d]{4} [\d]{3}/g;
+	        var phoneNumber = /(\+|[0]{2})[\d]{2} [\d]{3} [\d]{4} [\d]{3}$/g;
 	        if (!control.value) {
-	            return null;
+	            return { "phone": true };
 	        }
 	        var valid = phoneNumber.test(control.value);
 	        if (valid) {
 	            return null;
 	        }
-	        return { "invalid": true };
+	        return { "phone": true };
 	    };
 	    DonorModel.email = function (control) {
 	        //Skip validation if empty, to handle optional fields
-	        var emailAddress = /\w+@+[a-zA-z]+?\.[a-zA-Z]{2,3}(\.[a-zA-Z]{2})?/g;
+	        var emailAddress = /\w+@+[a-zA-z]+?\.[a-zA-Z]{2,3}(\.[a-zA-Z]{2}$)?/g;
 	        if (!control.value) {
-	            return null;
+	            return { "email": true };
 	        }
 	        var valid = emailAddress.test(control.value);
 	        if (valid) {
 	            return null;
 	        }
-	        return { "invalid": true };
+	        return { "email": true };
 	    };
 	    DonorModel = __decorate([
 	        core_1.Injectable(), 

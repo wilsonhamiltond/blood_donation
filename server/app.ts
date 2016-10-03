@@ -33,16 +33,22 @@ class Server{
     }
     
     config(){
-        this.app.use(json())
+        this.app.use(json());
+        var db = '';
         if (this.app.get("env") === "development") {
             this.app.use(express.static(join(__dirname, '../node_modules')));
             this.app.use(express.static(join(__dirname, '../tools')));
+            db = 'mongodb://localhost:27017/blood_donation';
         }
         this.app.use('/', express.static(join(__dirname, '../')));
         this.app.use('/client', express.static(join(__dirname, '../client')));
         this.app.use( express.static( join( __dirname, '../public' ) ) );
         
-        mongoose.connect('mongodb://localhost:27017/blood_donation');
+        if( db == ''){
+            db = 'mongodb://heroku_8w7ntdjl:6n8gttupcjbd1i53un72khjpfp@ds049496.mlab.com:49496/heroku_8w7ntdjl';
+        }
+        mongoose.connect(db);
+        console.log(db);
     }
     
     services(){

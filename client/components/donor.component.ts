@@ -28,6 +28,7 @@ export class DonorComponent{
     }
 
     close() {
+        this.donorForm.reset();
         this.donorModal.close();
     }
 

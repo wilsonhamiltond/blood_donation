@@ -23,27 +23,27 @@ var DonorModel = (function () {
     }
     DonorModel.phone = function (control) {
         //Skip validation if empty, to handle optional fields
-        var phoneNumber = /(\+|[0]{2})[\d]{2} [\d]{3} [\d]{4} [\d]{3}/g;
+        var phoneNumber = /(\+|[0]{2})[\d]{2} [\d]{3} [\d]{4} [\d]{3}$/g;
         if (!control.value) {
-            return null;
+            return { "phone": true };
         }
         var valid = phoneNumber.test(control.value);
         if (valid) {
             return null;
         }
-        return { "invalid": true };
+        return { "phone": true };
     };
     DonorModel.email = function (control) {
         //Skip validation if empty, to handle optional fields
-        var emailAddress = /\w+@+[a-zA-z]+?\.[a-zA-Z]{2,3}(\.[a-zA-Z]{2})?/g;
+        var emailAddress = /\w+@+[a-zA-z]+?\.[a-zA-Z]{2,3}(\.[a-zA-Z]{2}$)?/g;
         if (!control.value) {
-            return null;
+            return { "email": true };
         }
         var valid = emailAddress.test(control.value);
         if (valid) {
             return null;
         }
-        return { "invalid": true };
+        return { "email": true };
     };
     DonorModel = __decorate([
         core_1.Injectable(), 
