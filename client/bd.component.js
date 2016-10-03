@@ -14,31 +14,56 @@ var angular2_toaster_1 = require('angular2-toaster/angular2-toaster');
 var map_component_1 = require('./components/map.component');
 var search_component_1 = require('./components/search.component');
 var donor_component_1 = require('./components/donor.component');
+var confirm_dialog_component_1 = require('./components/confirm.dialog.component');
+var io = require('socket.io-client');
 var BloodDonationComponent = (function () {
     function BloodDonationComponent(toaster) {
         this.toaster = toaster;
+        this.socket = io(location.origin);
     }
     // once the map loads
     BloodDonationComponent.prototype.onMapLoad = function (response) {
         this.map = response.map;
         // bind the search dijit to the map
         this.searchMapComponent.setMap(this.map);
-        /*// initialize the leged dijit with map and layer infos
-        this.legendComponent.init(map, response.layerInfos);
-        // set the selected basemap
-        this.basemapSelect.selectedBasemap = response.basemapName;
-        // bind the map title
-        this.title = response.itemInfo.item.title;
-        //bind the legendlayer
-        this.LayerComponent.init(response);*/
         this.mapCompoenent.setBasemap('streets');
         this.getGeolocation();
-        this.mapCompoenent.showMarkers();
+        this.getDonors();
+        var self = this;
+        this.socket.on('donor_saved', function (donor) {
+            console.log(donor);
+            self.mapCompoenent.showMarkers([donor]);
+        });
+        this.socket.on('donor_delete', function (donor) {
+            console.log(donor.firstName + ' was deleted');
+            self.mapCompoenent.deleteMarker(donor);
+        });
+    };
+    BloodDonationComponent.prototype.getDonors = function () {
+        var _this = this;
+        var request = this.donorComponent.donorService.gets();
+        request.subscribe(function (donors) {
+            _this.mapCompoenent.showMarkers(donors);
+        });
+    };
+    BloodDonationComponent.prototype.onEditDonor = function (event) {
+        this.confirmDialog.open();
+    };
+    BloodDonationComponent.prototype.onDeleteDonor = function (graphic) {
+        this.confirmDialog.show('Confirmation', 'Do you want delete the donor ' + (graphic.node.firstName + ' ' || '') + (graphic.node.lastName || ''), graphic);
+    };
+    BloodDonationComponent.prototype.onAcceptConfirm = function (graphic) {
+        this.donorComponent.deleteDonor(graphic.node).
+            subscribe(function (res) {
+            if (res.result == true) {
+                console.log(graphic.node);
+            }
+        });
     };
     BloodDonationComponent.prototype.onMapClick = function (event) {
         var object = {
-            latitude: event.mapPoint.y,
-            longitude: event.mapPoint.x
+            latitude: event.mapPoint.getLatitude(),
+            longitude: event.mapPoint.getLongitude()
         };
         this.showDonorPopup(object);
         this.mapCompoenent.getAddress(event.mapPoint).then(function (res) {
@@ -50,6 +75,7 @@ var BloodDonationComponent = (function () {
     };
     BloodDonationComponent.prototype.onDonorSave = function (response) {
         this.toaster.pop('success', 'Success!', 'Donor information Save success.!');
+        this.socket.emit('donorSaved', response);
         console.log(response);
     };
     BloodDonationComponent.prototype.getGeolocation = function () {
@@ -75,6 +101,10 @@ var BloodDonationComponent = (function () {
         core_1.ViewChild(donor_component_1.DonorComponent), 
         __metadata('design:type', donor_component_1.DonorComponent)
     ], BloodDonationComponent.prototype, "donorComponent", void 0);
+    __decorate([
+        core_1.ViewChild(confirm_dialog_component_1.ConfirmDialogComponent), 
+        __metadata('design:type', confirm_dialog_component_1.ConfirmDialogComponent)
+    ], BloodDonationComponent.prototype, "confirmDialog", void 0);
     BloodDonationComponent = __decorate([
         core_1.Component({
             selector: 'bd-app',

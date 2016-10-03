@@ -19,6 +19,8 @@ var MapComponent = (function () {
         this._mapService = _mapService;
         this.mapLoaded = new core_1.EventEmitter();
         this.mapClick = new core_1.EventEmitter();
+        this.deleteGraphicClick = new core_1.EventEmitter();
+        this.editGraphicCilck = new core_1.EventEmitter();
         this.itemId = '8e42e164d4174da09f61fe0d3f206641';
         this.options = {
             basemap: 'streets',
@@ -45,6 +47,47 @@ var MapComponent = (function () {
             _this.map.on('click', function (event) {
                 _this.mapClick.next(event);
             });
+            _this.map.graphics.on("click", function (e) {
+                //get the associated node info when the graphic is clicked
+                var donor = e.graphic.node;
+                self.map.infoWindow.setTitle("Donor Data");
+                self.map.infoWindow.setContent('<div class="col-lg-12 n-p donor-info">' +
+                    '<div class="col-lg-5 n-p">Donor Name:</div>' +
+                    '<div class="col-lg-7 n-p">' +
+                    '<b>' + donor.firstName + ' ' + donor.lastName + '</b>' +
+                    '</div>' +
+                    '<div class="col-lg-5 n-p">Contact Number:</div>' +
+                    '<div class="col-lg-7 n-p">' +
+                    '<b>' + donor.contactNumber + '</b>' +
+                    '</div>' +
+                    '<div class="col-lg-5 n-p">Email Address:</div>' +
+                    '<div class="col-lg-7 n-p" >' +
+                    '<a class="donor-link">Click to show</a>' +
+                    '<b>' + donor.emailAddress + '</b>' +
+                    '</div>' +
+                    '<div class="col-lg-5 n-p">Blood Group:</div>' +
+                    '<div class="col-lg-7 n-p">' +
+                    '<a class="donor-link">Click to show</a>' +
+                    '<b>' + donor.bloodGroup + '</b>' +
+                    '</div>' +
+                    '<div class="col-lg-12 margin-10 n-p">' +
+                    '<a id="editButton" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-pencil"></i> Edit</a>' +
+                    '<a id="deleteButton" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i> Delete</a>' +
+                    '</div>' +
+                    '</div>');
+                self.map.infoWindow.show(e.screenPoint, self.map.getInfoWindowAnchor(e.screenPoint));
+                $('.donor-link').click(function (ae) {
+                    $(ae.target).addClass('clicked');
+                });
+                $('#editButton').click(function (ae) {
+                    self.editGraphicCilck.next(e.graphic);
+                });
+                $('#deleteButton').click(function (ae) {
+                    self.deleteGraphicClick.next(e.graphic);
+                });
+                e.stopPropagation();
+                e.cancelBubble = true;
+            });
             _this.mapLoaded.next(response);
         });
     };
@@ -52,8 +95,11 @@ var MapComponent = (function () {
         this._mapService.clearBasemap(this.map);
         this.map.setBasemap(basemapName);
     };
-    MapComponent.prototype.showMarkers = function () {
-        this._mapService.showMarkers(this.map);
+    MapComponent.prototype.showMarkers = function (donors) {
+        this._mapService.showMarkers(this.map, donors);
+    };
+    MapComponent.prototype.deleteMarker = function (graphic) {
+        this._mapService.deleteMarker(this.map, graphic);
     };
     // destroy map
     MapComponent.prototype.ngOnDestroy = function () {
@@ -69,6 +115,14 @@ var MapComponent = (function () {
         core_1.Output(), 
         __metadata('design:type', Object)
     ], MapComponent.prototype, "mapClick", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], MapComponent.prototype, "deleteGraphicClick", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], MapComponent.prototype, "editGraphicCilck", void 0);
     MapComponent = __decorate([
         core_1.Component({
             selector: 'bd-map',

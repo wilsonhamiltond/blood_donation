@@ -16,7 +16,6 @@ var Search = require('esri/dijit/Search');
 var Point = require('esri/geometry/Point');
 var Locator = require('esri/tasks/locator');
 var PictureMarkerSymbol = require("esri/symbols/PictureMarkerSymbol");
-var TextSymbol = require("esri/symbols/TextSymbol");
 var Graphic = require("esri/graphic");
 var MapService = (function () {
     function MapService() {
@@ -27,15 +26,14 @@ var MapService = (function () {
     };
     // load a web map and return respons
     MapService.prototype.createMap = function (itemIdOrInfo, domNodeOrId, options) {
-        var _this = this;
         return arcgisUtils.createMap(itemIdOrInfo, domNodeOrId, options).then(function (response) {
-            // append layer infos and basemap name to response before returning
-            response.layerInfos = arcgisUtils.getLegendLayers(response);
-            response.basemapName = _this.getBasemapName(response.map);
             return response;
         });
     };
     ;
+    MapService.prototype.changeClass = function () {
+        this.emailClicked = true;
+    };
     MapService.prototype.getAddressFromPoint = function (point) {
         var locatorUrl = 'http://serverapps101.esri.com/arcgis/rest/services/MGRS/GeocodeServer';
         var locator = new Locator(locatorUrl);
@@ -107,24 +105,26 @@ var MapService = (function () {
                 layerId.layer.setVisibility(!selectedLayer.checked);
         });
     };
-    MapService.prototype.showMarkers = function (map) {
-        //// adding in the markers
-        var locations = [{
-                latitude: 1.382,
-                longitude: 103.949,
-                text: 34
-            }, {
-                latitude: 1.380,
-                longitude: 103.952,
-                text: 50
-            }];
-        var picSymbol = new PictureMarkerSymbol('http://static.arcgis.com/images/Symbols/Shapes/BluePin1LargeB.png', 60, 60);
-        for (var i = 0; i < locations.length; i++) {
-            var geometryPoint = new Point(locations[i].longitude, locations[i].latitude);
-            var textSymbol = new TextSymbol(locations[i].text).setOffset(0, -4);
-            map.graphics.add(new Graphic(geometryPoint, picSymbol));
-            map.graphics.add(new Graphic(geometryPoint, textSymbol));
-        }
+    MapService.prototype.showMarkers = function (map, donors) {
+        var picSymbol = new PictureMarkerSymbol('./assets/img/blood-donation.png', 60, 60);
+        donors.forEach(function (donor) {
+            var geometryPoint = new Point(donor.longitude, donor.latitude);
+            /*var textSymbol = new TextSymbol('').setOffset(0, -4);
+            map.graphics.add(new Graphic(geometryPoint, picSymbol));*/
+            var graphic = new Graphic(geometryPoint, picSymbol);
+            graphic.node = donor;
+            map.graphics.add(graphic);
+        });
+    };
+    MapService.prototype.deleteMarker = function (map, donor) {
+        map.graphics.graphics.forEach(function (graphic) {
+            if (graphic.node) {
+                if (graphic.node._id == donor._id) {
+                    map.graphics.clear(graphic);
+                    map.infoWindow.hide();
+                }
+            }
+        });
     };
     MapService = __decorate([
         core_1.Injectable(), 

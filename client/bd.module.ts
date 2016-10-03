@@ -7,9 +7,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MapComponent} from './components/map.component';
 import { SearchMapComponent} from './components/search.component';
 import { DonorComponent} from './components/donor.component';
+import { ConfirmDialogComponent } from './components/confirm.dialog.component';
 
 import { Ng2Bs3ModalModule } from 'ng2-bs3-modal/ng2-bs3-modal';
 import {ToasterModule} from 'angular2-toaster/angular2-toaster';
+
 
 @NgModule({
     imports: [
@@ -24,7 +26,8 @@ import {ToasterModule} from 'angular2-toaster/angular2-toaster';
         BloodDonationComponent,
         MapComponent,
         SearchMapComponent,
-        DonorComponent
+        DonorComponent,
+        ConfirmDialogComponent
     ],
     bootstrap: [BloodDonationComponent],
     schemas: [

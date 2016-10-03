@@ -17,7 +17,7 @@ export class DonorComponent{
     @Output() saveDonor = new EventEmitter();
     constructor( 
         private donorForm: DonorModel,
-        private donorService: DonorService){
+        public donorService: DonorService){
             this.address = {
                 address: '',
                 latitude: 0,
@@ -34,7 +34,9 @@ export class DonorComponent{
         this.address.longitude = object.longitude;
         this.donorModal.open();
     } 
-    
+    deleteDonor(donor){
+        return this.donorService.delete(donor);
+    }
     saveDonnor(form: any): void{
         if( this.donorForm.valid ){
             this.donorForm.reset();

@@ -53,7 +53,7 @@ var Donor = (function () {
         });
         return deff.promise;
     };
-    Donor.prototype.delete = function (params) {
+    Donor.prototype.donorDelete = function (params) {
         var deff = q_1.defer();
         this.get(params).then(function (donor) {
             donor[0].remove(function (err) {
@@ -70,7 +70,7 @@ var Donor = (function () {
         });
         return deff.promise;
     };
-    Donor.services = function () {
+    Donor.services = function (io) {
         var donor = new Donor();
         var router = express_1.Router();
         router.get('/donors', function (req, res) {
@@ -92,11 +92,21 @@ var Donor = (function () {
                 });
             });
         });
+        router.post('/donor/delete', function (req, res) {
+            var donorObject = req.body;
+            donor.donorDelete({ _id: donorObject._id }).then(function () {
+                io.emit('donor_delete', donorObject);
+                res.send({
+                    result: true
+                });
+            });
+        });
         router.post('/donor', function (req, res) {
             var donorObject = req.body;
             donorObject.ipAddress = req.header('x-forwarded-for');
             donor.save(donorObject).then(function (obj) {
                 console.log(obj);
+                io.emit('donor_saved', obj._doc);
                 res.send({
                     result: true,
                     donor: obj._doc

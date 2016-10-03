@@ -3,6 +3,8 @@ var express = require('express');
 var body_parser_1 = require('body-parser');
 var path_1 = require('path');
 var mongoose = require('mongoose');
+var http = require('http');
+var socket = require('socket.io');
 var donor_1 = require('./modules/donor');
 /**
 *   The server
@@ -12,6 +14,8 @@ var donor_1 = require('./modules/donor');
 var Server = (function () {
     function Server() {
         this.app = express();
+        this.http = http.Server(this.app);
+        this.io = socket(this.http);
         this.config();
         this.services();
         this.run();
@@ -31,13 +35,19 @@ var Server = (function () {
         mongoose.connect('mongodb://localhost:27017/blood_donation');
     };
     Server.prototype.services = function () {
-        this.app.use(donor_1.Donor.services());
+        this.app.use(donor_1.Donor.services(this.io));
         this.app.get('/', function (req, res) {
             res.sendFile(__dirname + '../pulic/index.html');
         });
     };
     Server.prototype.run = function () {
-        this.app.listen(process.env.PORT || 8080, function () {
+        this.io.on('connection', function (socket) {
+            console.log('a user connected');
+            socket.on('disconnect', function () {
+                console.log('user disconnected');
+            });
+        });
+        this.http.listen(process.env.PORT || 8080, function () {
             console.log('Running in port: ' + (process.env.PORT || 8080));
         });
     };

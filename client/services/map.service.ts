@@ -15,7 +15,7 @@ import Graphic = require( "esri/graphic");
 @Injectable()
 export class MapService {
   _basemaps: any[];
-
+  emailClicked: false;
   getPoint(coords){
     
     var point = new Point(coords.longitude, coords.latitude );
@@ -25,13 +25,14 @@ export class MapService {
 
   // load a web map and return respons
   createMap(itemIdOrInfo: any, domNodeOrId: any, options: Object) {
-    return arcgisUtils.createMap(itemIdOrInfo, domNodeOrId, options).then(response => {
-      // append layer infos and basemap name to response before returning
-      response.layerInfos = arcgisUtils.getLegendLayers(response);
-      response.basemapName = this.getBasemapName(response.map);
+      return arcgisUtils.createMap(itemIdOrInfo, domNodeOrId, options).then(response => {
       return response;
     });
   };
+  
+  changeClass(){
+    this.emailClicked = true;
+  }
 
   getAddressFromPoint(point){
     var locatorUrl = 'http://serverapps101.esri.com/arcgis/rest/services/MGRS/GeocodeServer';
@@ -106,25 +107,26 @@ export class MapService {
     });
   }
 
-  showMarkers(map){
-    //// adding in the markers
-      var locations = [{
-          latitude: 1.382,
-          longitude: 103.949,
-          text: 34
-      }, {
-          latitude: 1.380,
-          longitude: 103.952,
-          text: 50
-      }];
-      var picSymbol = new PictureMarkerSymbol(
-              'http://static.arcgis.com/images/Symbols/Shapes/BluePin1LargeB.png', 60, 60);
-      
-      for (var i = 0; i < locations.length; i++) {
-          var geometryPoint = new Point(locations[i].longitude, locations[i].latitude);
-          var textSymbol = new TextSymbol(locations[i].text).setOffset(0, -4);
-          map.graphics.add(new Graphic(geometryPoint, picSymbol));
-          map.graphics.add(new Graphic(geometryPoint, textSymbol));
+  showMarkers(map, donors){
+    var picSymbol = new PictureMarkerSymbol('./assets/img/blood-donation.png', 60, 60);
+    donors.forEach((donor)=>{
+          var geometryPoint = new Point(donor.longitude, donor.latitude);
+          /*var textSymbol = new TextSymbol('').setOffset(0, -4);
+          map.graphics.add(new Graphic(geometryPoint, picSymbol));*/
+          var graphic = new Graphic(geometryPoint, picSymbol);
+          graphic.node = donor;
+          map.graphics.add( graphic );
+    });
+  }
+  
+  deleteMarker(map, donor){
+    map.graphics.graphics.forEach((graphic) =>{
+      if(graphic.node){
+        if( graphic.node._id == donor._id){
+          map.graphics.clear( graphic );
+          map.infoWindow.hide();
+        }
       }
-}
+    });
+  }
 }

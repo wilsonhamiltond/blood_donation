@@ -14,4 +14,13 @@ export class DonorService{
         return this.http.post('/donor', donor, options)
             .map( (res) => res.json());
     }
+    
+    delete(donor){
+        return this.http.post('/donor/delete', donor, options)
+            .map( (res) => res.json());
+    }
+    gets( ){
+        return this.http.get('/donors', options)
+            .map( (res) => res.json());
+    }
 }

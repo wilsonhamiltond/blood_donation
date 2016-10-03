@@ -31,6 +31,9 @@ var DonorComponent = (function () {
         this.address.longitude = object.longitude;
         this.donorModal.open();
     };
+    DonorComponent.prototype.deleteDonor = function (donor) {
+        return this.donorService.delete(donor);
+    };
     DonorComponent.prototype.saveDonnor = function (form) {
         var _this = this;
         if (this.donorForm.valid) {

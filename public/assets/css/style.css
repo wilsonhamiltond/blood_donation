@@ -33,10 +33,49 @@ bd-app div.loading{
   margin-top: -128px;
   position: absolute;
 }
-
-.margin-10{
-  margin: 10px;
+.n-p{
+  padding-left: 0px;
+  padding-right: 0px;
 }
+.margin-10{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 div.modal-dialog{
   width: 450px !important;
+}
+
+.donor-info a{
+  color: #337ab7 !important;
+  line-height: inherit !important;
+  text-align: justify !important;
+}
+.donor-info a.btn{
+  margin-right: 15px;
+  padding: 5px;
+}
+
+a.donor-link{
+  padding: 0 !important;
+  font-family: "CalciteWebCoreIcons";
+  speak: none;
+  color: #6e6e6e;
+  font-size: 13px;
+  line-height: inherit !important;
+  text-align: justify !important;
+  display: block;
+  color: #337ab7 !important;
+}
+
+a.donor-link + b{
+  display: none;
+}
+
+a.donor-link.clicked{
+  display: none;
+}
+
+a.donor-link.clicked + b{
+  display: block;
 }

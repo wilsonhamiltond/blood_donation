@@ -17,6 +17,10 @@ export class MapComponent implements OnInit, OnDestroy{
     
     @Output() mapLoaded = new EventEmitter();
     @Output() mapClick = new EventEmitter();
+    
+    @Output() deleteGraphicClick = new EventEmitter();
+    @Output() editGraphicCilck = new EventEmitter();
+
 
     map: any;
     options: Object;
@@ -60,6 +64,55 @@ export class MapComponent implements OnInit, OnDestroy{
                 this.mapClick.next(event);
             });
 
+            this.map.graphics.on("click", function(e){
+                //get the associated node info when the graphic is clicked
+                var donor = e.graphic.node;
+                
+                self.map.infoWindow.setTitle("Donor Data");
+                self.map.infoWindow.setContent( 
+                  '<div class="col-lg-12 n-p donor-info">'+
+                    '<div class="col-lg-5 n-p">Donor Name:</div>' +
+                    '<div class="col-lg-7 n-p">'+
+                      '<b>' + donor.firstName + ' ' + donor.lastName +'</b>'+
+                    '</div>' +
+                    '<div class="col-lg-5 n-p">Contact Number:</div>' +
+                    '<div class="col-lg-7 n-p">'+
+                      '<b>' + donor.contactNumber+'</b>'+
+                    '</div>' +
+                    '<div class="col-lg-5 n-p">Email Address:</div>' +
+                    '<div class="col-lg-7 n-p" >'+
+                      '<a class="donor-link">Click to show</a>'+
+                      '<b>' + donor.emailAddress+'</b>' +
+                    '</div>' +
+                    '<div class="col-lg-5 n-p">Blood Group:</div>' +
+                    '<div class="col-lg-7 n-p">'+
+                      '<a class="donor-link">Click to show</a>'+
+                      '<b>' + donor.bloodGroup+'</b>'+
+                    '</div>' +
+                    '<div class="col-lg-12 margin-10 n-p">'+
+                      '<a id="editButton" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-pencil"></i> Edit</a>'+
+                      '<a id="deleteButton" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i> Delete</a>'+
+                    '</div>'+
+                  '</div>'
+                );
+                
+                self.map.infoWindow.show(e.screenPoint, self.map.getInfoWindowAnchor(e.screenPoint));
+                
+                $('.donor-link').click((ae) =>{
+                  $(ae.target).addClass('clicked');
+                });
+                
+                $('#editButton').click((ae) =>{
+                    self.editGraphicCilck.next(e.graphic);
+                });
+                
+                $('#deleteButton').click((ae) =>{
+                    self.deleteGraphicClick.next(e.graphic);
+                });
+                
+                e.stopPropagation();
+                e.cancelBubble = true;
+            });
             this.mapLoaded.next(response);
         });
     }
@@ -69,8 +122,12 @@ export class MapComponent implements OnInit, OnDestroy{
         this.map.setBasemap(basemapName);
     }
 
-    showMarkers(){
-        this._mapService.showMarkers(this.map);
+    showMarkers(donors){
+        this._mapService.showMarkers(this.map, donors);
+    }
+    
+    deleteMarker(graphic){
+        this._mapService.deleteMarker(this.map, graphic);
     }
 
     // destroy map

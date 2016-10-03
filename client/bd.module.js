@@ -16,6 +16,7 @@ var forms_1 = require('@angular/forms');
 var map_component_1 = require('./components/map.component');
 var search_component_1 = require('./components/search.component');
 var donor_component_1 = require('./components/donor.component');
+var confirm_dialog_component_1 = require('./components/confirm.dialog.component');
 var ng2_bs3_modal_1 = require('ng2-bs3-modal/ng2-bs3-modal');
 var angular2_toaster_1 = require('angular2-toaster/angular2-toaster');
 var BloodDonationMainModule = (function () {
@@ -35,7 +36,8 @@ var BloodDonationMainModule = (function () {
                 bd_component_1.BloodDonationComponent,
                 map_component_1.MapComponent,
                 search_component_1.SearchMapComponent,
-                donor_component_1.DonorComponent
+                donor_component_1.DonorComponent,
+                confirm_dialog_component_1.ConfirmDialogComponent
             ],
             bootstrap: [bd_component_1.BloodDonationComponent],
             schemas: [

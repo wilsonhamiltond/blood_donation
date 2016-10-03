@@ -20,6 +20,14 @@ var DonorService = (function () {
         return this.http.post('/donor', donor, options)
             .map(function (res) { return res.json(); });
     };
+    DonorService.prototype.delete = function (donor) {
+        return this.http.post('/donor/delete', donor, options)
+            .map(function (res) { return res.json(); });
+    };
+    DonorService.prototype.gets = function () {
+        return this.http.get('/donors', options)
+            .map(function (res) { return res.json(); });
+    };
     DonorService = __decorate([
         core_1.Injectable(), 
         __metadata('design:paramtypes', [http_1.Http])

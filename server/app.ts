@@ -3,6 +3,8 @@ import { json } from 'body-parser';
 import { join } from 'path';
 import * as mongoose from 'mongoose';
 import { equal } from 'assert';
+import * as http from 'http';
+import * as socket from 'socket.io';
 
 import { Donor } from './modules/donor';
 
@@ -21,9 +23,10 @@ class Server{
     
     constructor() {
         this.app = express();
+        this.http = http.Server(this.app);
+        this.io = socket(this.http);
         
         this.config();
-        
         this.services();
         
         this.run();
@@ -43,7 +46,7 @@ class Server{
     }
     
     services(){
-        this.app.use(Donor.services());
+        this.app.use(Donor.services(this.io));
 
         this.app.get('/', function(req, res){
            res.sendFile(__dirname + '../pulic/index.html'); 
@@ -51,7 +54,14 @@ class Server{
     }
     
     run(){
-        this.app.listen( process.env.PORT || 8080, function(){
+        this.io.on('connection', function(socket){
+          console.log('a user connected');
+          socket.on('disconnect', function(){
+            console.log('user disconnected');
+          });
+        });
+        
+        this.http.listen( process.env.PORT || 8080, function(){
             console.log( 'Running in port: ' + (process.env.PORT || 8080));
         });
     }

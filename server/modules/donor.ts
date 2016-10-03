@@ -58,7 +58,7 @@ export class Donor{
         return deff.promise;
     }
     
-    delete(params){
+    donorDelete(params){
         var deff = defer();
         this.get(params).then(function(donor){
             donor[0].remove(function(err){
@@ -75,7 +75,7 @@ export class Donor{
         return deff.promise;
     }
     
-    public static services(){
+    public static services(io){
         var donor = new Donor();
         var router: Router = Router();
         router.get('/donors', function(req, res){
@@ -100,11 +100,22 @@ export class Donor{
             });
         });
         
+        router.post('/donor/delete', function(req, res){
+            var donorObject = req.body;
+            donor.donorDelete({ _id: donorObject._id }).then(() => {
+                io.emit('donor_delete', donorObject);
+                res.send({
+                    result: true
+                });
+            });
+        });
+        
         router.post('/donor', function(req, res){
             var donorObject = req.body;
             donorObject.ipAddress = req.header('x-forwarded-for');
             donor.save(donorObject).then(function (obj) {
                 console.log(obj);
+                io.emit('donor_saved', obj._doc);
                 res.send({
                     result: true,
                     donor: obj._doc

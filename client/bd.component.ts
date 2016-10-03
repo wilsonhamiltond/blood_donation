@@ -5,20 +5,27 @@ import {ToasterService} from 'angular2-toaster/angular2-toaster';
 import { MapComponent} from './components/map.component';
 import { SearchMapComponent} from './components/search.component';
 import { DonorComponent} from './components/donor.component';
+import { ConfirmDialogComponent } from './components/confirm.dialog.component';
+
+import * as io from 'socket.io-client';
 
 @Component({
     selector: 'bd-app',
     templateUrl: 'client/bd.component.html',
-    providers: [ToasterService] 
+    providers: [ToasterService]
 })
 export class BloodDonationComponent{
     @ViewChild(MapComponent) mapCompoenent: MapComponent;
     @ViewChild(SearchMapComponent) searchMapComponent: SearchMapComponent;
     @ViewChild(DonorComponent) donorComponent: DonorComponent;
+    @ViewChild(ConfirmDialogComponent) confirmDialog: ConfirmDialogComponent;
 
     map: any;
-
-    constructor(private toaster: ToasterService){
+    socket: any;
+    constructor(
+        private toaster: ToasterService
+    ){
+        this.socket = io(location.origin);
     }
 
     // once the map loads
@@ -26,24 +33,51 @@ export class BloodDonationComponent{
         this.map = response.map;
 
         // bind the search dijit to the map
-        this.searchMapComponent.setMap(this.map);
-        /*// initialize the leged dijit with map and layer infos
-        this.legendComponent.init(map, response.layerInfos);
-        // set the selected basemap
-        this.basemapSelect.selectedBasemap = response.basemapName;
-        // bind the map title
-        this.title = response.itemInfo.item.title;
-        //bind the legendlayer
-        this.LayerComponent.init(response);*/
+        this.searchMapComponent.setMap(this.map);.
+        
         this.mapCompoenent.setBasemap('streets');
         this.getGeolocation();
-        this.mapCompoenent.showMarkers();
+        this.getDonors();
+        var self = this;
+        this.socket.on('donor_saved', function(donor){
+            console.log(donor);
+            self.mapCompoenent.showMarkers([donor]);
+        });
+        this.socket.on('donor_delete', function(donor){
+            console.log(donor.firstName + ' was deleted');
+            self.mapCompoenent.deleteMarker(donor);
+        });
+    }
+    getDonors(){
+        var request = this.donorComponent.donorService.gets();
+        request.subscribe((donors) => {
+            this.mapCompoenent.showMarkers(donors);
+        });
+    }
+    onEditDonor(event){
+          this.confirmDialog.open();
+    }
+    
+    onDeleteDonor(graphic){
+        this.confirmDialog.show(
+            'Confirmation', 
+            'Do you want delete the donor ' + (graphic.node.firstName  + ' '|| '') + (graphic.node.lastName || ''),
+            graphic);
+    }
+    
+    onAcceptConfirm(graphic){
+        this.donorComponent.deleteDonor(graphic.node).
+            subscribe( (res) =>{
+                if( res.result == true){
+                    console.log(graphic.node);
+                }
+            });
     }
     
     onMapClick(event){
         var object = {
-            latitude: event.mapPoint.y,
-            longitude: event.mapPoint.x
+            latitude: event.mapPoint.getLatitude(),
+            longitude: event.mapPoint.getLongitude()
         };
         this.showDonorPopup(object);
         this.mapCompoenent.getAddress(event.mapPoint).then((res)=>{
@@ -57,6 +91,8 @@ export class BloodDonationComponent{
 
     onDonorSave(response){
         this.toaster.pop( 'success', 'Success!', 'Donor information Save success.!');
+        
+        this.socket.emit('donorSaved',  response);
         console.log(response);
     }
 
