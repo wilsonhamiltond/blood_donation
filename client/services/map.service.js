@@ -10,8 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var arcgisUtils = require('esri/arcgis/utils');
-var esriBasemaps = require('esri/basemaps');
-var Legend = require('esri/dijit/Legend');
 var Search = require('esri/dijit/Search');
 var Point = require('esri/geometry/Point');
 var Locator = require('esri/tasks/locator');
@@ -31,9 +29,6 @@ var MapService = (function () {
         });
     };
     ;
-    MapService.prototype.changeClass = function () {
-        this.emailClicked = true;
-    };
     MapService.prototype.getAddressFromPoint = function (point) {
         var locatorUrl = 'http://serverapps101.esri.com/arcgis/rest/services/MGRS/GeocodeServer';
         var locator = new Locator(locatorUrl);
@@ -45,46 +40,6 @@ var MapService = (function () {
         return new Search(options, domNodeOrId);
     };
     ;
-    // create a legend dijit at the dom node
-    MapService.prototype.createLegend = function (options, domNodeOrId) {
-        return new Legend(options, domNodeOrId);
-    };
-    ;
-    // get esriBasemaps as array of basemap defintion objects
-    MapService.prototype.getBasemaps = function () {
-        if (!this._basemaps) {
-            this._basemaps = Object.keys(esriBasemaps).map(function (name) {
-                var basemap = esriBasemaps[name];
-                basemap.name = name;
-                return basemap;
-            });
-        }
-        return this._basemaps;
-    };
-    // get the name of basemap layer
-    MapService.prototype.getBasemapName = function (map) {
-        var _this = this;
-        var basemapName = map.getBasemap();
-        if (basemapName) {
-            return basemapName;
-        }
-        // loop through map layers
-        map.layerIds.some(function (layerId) {
-            var layerUrl = map.getLayer(layerId).url;
-            // loop through known basemap definitions
-            return _this.getBasemaps().some(function (basemapDef) {
-                // loop through layers in basemap definition (isn't this fun?)
-                return basemapDef.baseMapLayers.some(function (basemapDefLayer) {
-                    var match = basemapDefLayer.url.toLowerCase() === layerUrl.toLowerCase();
-                    if (match) {
-                        basemapName = basemapDef.name;
-                    }
-                    return match;
-                });
-            });
-        });
-        return basemapName;
-    };
     // try to remove basemap layers from map
     // if not defined, then remove the first layer
     MapService.prototype.clearBasemap = function (map) {
@@ -99,23 +54,19 @@ var MapService = (function () {
         }
     };
     //change the selected layer visibility
-    MapService.prototype.selectLayer = function (response, selectedLayer) {
-        response.layerInfos.forEach(function (layerId) {
-            if (selectedLayer.name === layerId.title)
-                layerId.layer.setVisibility(!selectedLayer.checked);
-        });
-    };
     MapService.prototype.showMarkers = function (map, donors) {
         var picSymbol = new PictureMarkerSymbol('./assets/img/blood-donation.png', 60, 60);
         if (donors.length == 1) {
-            map.graphics.graphics.forEach(function (graphic) {
-                if (graphic.node) {
-                    if (graphic.node._id == donors[0]._id) {
-                        map.graphics.remove(graphic);
-                        map.infoWindow.hide();
+            if (donors[0]._id) {
+                map.graphics.graphics.forEach(function (graphic) {
+                    if (graphic.node) {
+                        if (graphic.node._id == donors[0]._id) {
+                            map.graphics.remove(graphic);
+                            map.infoWindow.hide();
+                        }
                     }
-                }
-            });
+                });
+            }
         }
         donors.forEach(function (donor) {
             var geometryPoint = new Point(donor.longitude, donor.latitude);

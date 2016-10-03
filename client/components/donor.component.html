@@ -42,7 +42,16 @@
                     </div>
                     <div class="form-group" [ngClass]="{'has-error':!donorForm.controls['bloodGroup'].valid, 'has-success' :donorForm.controls['bloodGroup'].valid}">
                         <label class="control-label" >Blood Group</label>
-                        <input type="text" class="form-control" [formControl]="donorForm.controls['bloodGroup']">
+                        <select class="form-control" [formControl]="donorForm.controls['bloodGroup']">
+                            <option value="A+" >A+</option>
+                            <option value="B+">B+</option>
+                            <option value="O+">O+</option>
+                            <option value="AB+">AB+</option>
+                            <option value="A-">A-</option>
+                            <option value="B-">B-</option>
+                            <option value="O-">O-</option>
+                            <option value="AB-">AB-</option>
+                        </select>
                         <span *ngIf="donorForm.controls['bloodGroup'].hasError('required') && donorForm.controls['bloodGroup'].touched" class="help-block">
                             The blood group is required
                         </span>

@@ -30,10 +30,6 @@ export class MapService {
     });
   };
   
-  changeClass(){
-    this.emailClicked = true;
-  }
-
   getAddressFromPoint(point){
     var locatorUrl = 'http://serverapps101.esri.com/arcgis/rest/services/MGRS/GeocodeServer';
     var locator = new Locator(locatorUrl);
@@ -45,47 +41,6 @@ export class MapService {
   createSearch(options: Object, domNodeOrId: any) {
     return new Search(options, domNodeOrId);
   };
-
-  // create a legend dijit at the dom node
-  createLegend(options: LegendOptions, domNodeOrId: any) {
-    return new Legend(options, domNodeOrId);
-  };
-
-  // get esriBasemaps as array of basemap defintion objects
-  getBasemaps() {
-    if (!this._basemaps) {
-      this._basemaps = Object.keys(esriBasemaps).map((name) => {
-        let basemap = esriBasemaps[name];
-        basemap.name = name;
-        return basemap;
-      });
-    }
-    return this._basemaps;
-  }
-
-  // get the name of basemap layer
-  getBasemapName(map) {
-    let basemapName = map.getBasemap();
-    if (basemapName) {
-      return basemapName;
-    }
-    // loop through map layers
-    map.layerIds.some(layerId => {
-      const layerUrl = map.getLayer(layerId).url;
-      // loop through known basemap definitions
-      return this.getBasemaps().some(basemapDef => {
-        // loop through layers in basemap definition (isn't this fun?)
-        return basemapDef.baseMapLayers.some(basemapDefLayer => {
-          const match = basemapDefLayer.url.toLowerCase() === layerUrl.toLowerCase();
-          if (match) {
-            basemapName = basemapDef.name;
-          }
-          return match;
-        });
-      });
-    });
-    return basemapName;
-  }
 
   // try to remove basemap layers from map
   // if not defined, then remove the first layer
@@ -100,16 +55,11 @@ export class MapService {
     }
   }
   //change the selected layer visibility
-  selectLayer(response, selectedLayer){ 
-    response.layerInfos.forEach(layerId =>{
-      if (selectedLayer.name===layerId.title)
-      layerId.layer.setVisibility(!selectedLayer.checked);
-    });
-  }
 
   showMarkers(map, donors){
     var picSymbol = new PictureMarkerSymbol('./assets/img/blood-donation.png', 60, 60);
     if( donors.length == 1){
+      if(donors[0]._id){
         map.graphics.graphics.forEach((graphic) =>{
           if(graphic.node){
             if( graphic.node._id == donors[0]._id){
@@ -118,6 +68,7 @@ export class MapService {
             }
           }
         });
+      }
     }
     donors.forEach((donor)=>{
           var geometryPoint = new Point(donor.longitude, donor.latitude);
