@@ -19,10 +19,11 @@ var ConfirmDialogComponent = (function () {
     ConfirmDialogComponent.prototype.close = function () {
         this.confirmModal.close();
     };
-    ConfirmDialogComponent.prototype.show = function (title, body, obejct) {
+    ConfirmDialogComponent.prototype.show = function (title, body, obejct, hideApply) {
         this.title = title;
         this.body = body;
         this.object = obejct;
+        this.hideApply = hideApply || false;
         this.confirmModal.open();
     };
     ConfirmDialogComponent.prototype.accept = function () {
