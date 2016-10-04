@@ -6,7 +6,7 @@
         {{body}}
     </modal-body>
     <modal-footer [show-default-buttons]="false">
-        <a ngClass="{'hide': hideApply}" class="btn btn-primary" (click)="accept()">Yes</a>
-        <a class="btn btn-warning" (click)="close()">No</a>
+        <a class="btn btn-primary {{ hideApply==false?'' :'hide'}}" (click)="accept()">Yes</a>
+        <a class="btn btn-warning" (click)="close()">{{ hideApply==false?'No' : 'Ok'}}</a>
     </modal-footer>
 </modal>

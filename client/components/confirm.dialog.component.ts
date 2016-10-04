@@ -14,7 +14,7 @@ export class ConfirmDialogComponent {
     public title: String = '';
     public body: String = '';
     public object: any;
-    public hideApply: false;
+    public hideApply = false;
     constructor( 
         ) {
             
@@ -26,7 +26,7 @@ export class ConfirmDialogComponent {
         this.title = title;
         this.body = body;
         this.object = obejct;
-        this.hideApply = hideApply || false
+        this.hideApply = hideApply || false;
         this.confirmModal.open();
     }
     accept(){

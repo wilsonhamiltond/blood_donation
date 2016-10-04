@@ -15,6 +15,7 @@ var ConfirmDialogComponent = (function () {
         this.acceptConfirm = new core_1.EventEmitter();
         this.title = '';
         this.body = '';
+        this.hideApply = false;
     }
     ConfirmDialogComponent.prototype.close = function () {
         this.confirmModal.close();

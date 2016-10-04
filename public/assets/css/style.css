@@ -8,7 +8,9 @@ bd-map div.map{
   background-color: white;
   display: block;
 }
-
+.hide{
+  display: none;
+}
 bd-map bd-search .arcgisSearch {
   display: block;
   position: absolute;
