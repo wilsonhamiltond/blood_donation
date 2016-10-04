@@ -128,7 +128,7 @@ export class Donor{
             var donorObject = req.body;
             donorObject.ipAddress = req.header('x-forwarded-for');
             donor.save(donorObject).then(function (obj) {
-                var doc = donorObject._id? donorObject : obj._doc ;
+                var doc = obj._id ? obj._doc : donorObject;
                 io.emit('donor_saved', doc);
                 res.send({
                     result: true,
