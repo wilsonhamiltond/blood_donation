@@ -29,7 +29,7 @@ export class BloodDonationComponent{
     }
     firstLoaded(){
         var isFirst = localStorage.getItem('isFirst');
-        if( isFirst){
+        if( !isFirst){
             localStorage.setItem('isFirst', 'true');
             
             this.confirmDialog.show(
