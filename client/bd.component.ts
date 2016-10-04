@@ -34,7 +34,7 @@ export class BloodDonationComponent{
             
             this.confirmDialog.show(
                 'Welcome to blood donation', 
-                'If you are a donor click on search and click on your address location for fill you information for donation else if you are a patient select a ping on the map for see the donor information.',
+                'If you are a donor search and click on your address location for fill you information for donation else if you are a patient select a ping on the map for see the donor information.',
                 {}, true);
         }
     }
